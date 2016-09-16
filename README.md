@@ -9,6 +9,46 @@ This recipe is not fully functional yet !!!
 
 When deploying a task from the marathon UI, the deployment hangs forever if mesos master is not the first one of the list (!). I'm currently digging into this bug.
 
+
+
+## Quick start with Windows Azure
+
+Start 6 Ubuntu 14.04 VMs on Windows Azure platform then install the following packages:
+
+      sudo apt-get install git
+      # on master node create SSH-key
+      ssh-keygen  -t rsa
+      cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+      scp -i cert.pem -r  ~/.ssh 10.85.168.146:~/
+      git clone https://github.com/aabdulwahed/ansible-mesos-cluster.git
+      cd ansible-mesos-cluster/roles/copy-authorized-key/files/
+      cp ~/.ssh/id_rsa.pub id_rsa_ansible.pub
+      vi main.yml # change the username
+      cd inventory/
+      vi test.ini  # change IP addresses
+      # install ansible on all nodes
+      sudo apt-get install software-properties-common
+      sudo apt-add-repository ppa:ansible/ansible
+      sudo apt-get update
+      sudo apt-get install ansible
+      sudo add-apt-repository ppa:openjdk-r/ppa
+      sudo apt-get update
+      sudo apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF
+      DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
+      CODENAME=$(lsb_release -cs)
+      echo "deb http://repos.mesosphere.io/${DISTRO} ${CODENAME} main" | sudo tee /etc/apt/sources.list.d/mesosphere.list
+      sudo apt-get -y update
+      ansible-playbook -i inventory/test.ini main.yml
+      vi inventory/test.ini
+      ansible-playbook -i inventory/test.ini main.yml
+      # if you have any issue with Marathon service check file below
+      sudo vi /var/log/syslog
+      sudo add-apt-repository ppa:openjdk-r/ppa
+      sudo apt-get update
+      sudo apt-get install openjdk-8-jdk
+      echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' >> /etc/profile && bash
+      # try to restart Marathon service on master nodes or add it to the Marathon bash script "which marathon"
+
 ## Quick start with Vagrant
 
 Vagrantfile defines 6 VMs: 3 mesos masters (running mesos/marathon) + 3 mesos slaves running docker
