@@ -47,7 +47,7 @@ Start 6 Ubuntu 14.04 VMs on Windows Azure platform then install the following pa
       sudo apt-get update
       sudo apt-get install openjdk-8-jdk
       echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' >> /etc/profile && bash
-      # try to restart Marathon service on master nodes or add it to the Marathon bash script "which marathon"
+      # try to restart Marathon service on master nodes or add JAVA_HOME directly in Marathon bash script "which marathon"
 
 ## Quick start with Vagrant
 
